@@ -1,0 +1,25 @@
+<div>
+	<div id="textlogo">
+		<h1 class="site-name"><a href="<%- config.root %>" title="<%= config.title %>"><%= config.title %></a></h1>
+		<h2 class="blog-motto"><% if (config.subtitle){ %><%= config.subtitle %><% } %></h2>
+	</div>
+	<div class="navbar"><a class="navbutton navmobile" href="#" title="<%= __('menu') %>">
+	</a></div>
+	<nav class="animated">
+		<ul>
+			<ul>
+			 	<% for (var i in theme.menu){ %>
+					<li><a href="<%- theme.menu[i] %>"><%= i %></a></li>
+				<% } %>
+				<li><a href="javascript:void(0)" id="local-search-btn">搜索</a></li>
+		</ul>
+	</nav>
+</div>
+
+<div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+<div class="popoverlay"></div>

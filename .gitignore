@@ -1,0 +1,9 @@
+.deploy_git
+node_modules
+public
+db.json
+*.log
+public/
+.DS_Store
+Thumbs.db
+

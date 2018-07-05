@@ -1,0 +1,23 @@
+<div class="openaside"><a class="navbutton" href="#" title="<%= __('showsidebar') %>"></a></div>
+<% if( table&&(item.toc !== false) && theme.toc.aside){ %>
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title"><%= __('contents') %></strong>
+  <%- toc(item.content) %>
+  </div>
+<% } %>
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="<%= __('hidesidebar') %>"></a></div>
+<aside class="clearfix">
+<% theme.widgets.forEach(function(widget){ %>
+  <%- partial('../_widget/' + widget) %>
+<% }); %>
+</aside>
+<div>
+<br />
+<a href="http://www.php-fig.org/psr/" target="_blank">
+    <img style="width:100%;height:auto;" src="http://italoqueiroz.github.io/images/php-fig/phpfig.png" alt="PHP: PHP-FIG"/>
+</a></div>
+<a href="http://www.phptherightway.com" target="_blank">
+    <img style="width:100%;height:auto;" src="http://www.phptherightway.com/images/banners/vert-rect-240x400.png" alt="PHP: The Right Way"/>
+</a>
+</div>
