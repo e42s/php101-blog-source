@@ -13,11 +13,13 @@ description:
 ---
 ## 概述
 想做个简单的聊天室，看一些示例程序里都用到了`fsockopen`函数，本来以为会是个很简单的函数，没想到一次用就踩坑了，报了如下错误:
+
 ```
 fsockopen:unable to connect to xxx:-1(Unable to find the socket transport http – did you forget to enable it when you configured PHP?) in xxx.php
 ```
 
 ## 示例代码
+
 ```
 <?php
     $host = 'http://www.baidu.com';
@@ -35,3 +37,5 @@ fsockopen:unable to connect to xxx:-1(Unable to find the socket transport http �
 ## 参考
 * [http://stackoverflow.com/questions/9965430/fsock-unable-to-find-the-socket-transport-http](http://stackoverflow.com/questions/9965430/fsock-unable-to-find-the-socket-transport-http)
 <br />
+
+

@@ -15,13 +15,16 @@ PHP-FPM内置了一个非常有用的状态页(status page)。
 ## 开启状态页
 ### 编辑PHP-FPM配置文件
 根据不同的Linux版本，PHP-FPM的配置文件路径有所不同，在centos中，PHP-FPM配置文件的路径为`/etc/php-fpm.d/www.conf`,在配置文件中找到`pm.status_path`配置项，取消注释，示例如下：
+
 ```
 pm.status_path = /status
 ```
+
 如果运行了多个PHP pool实例，也可以在/status前追加前缀。
 <br />
 ### 编辑Nginx配置文件
 在相应的server块中，增加如下配置:
+
 ```
 location ~ ^/(status|ping)$ {
 	  access_log off;
@@ -33,11 +36,13 @@ location ~ ^/(status|ping)$ {
      fastcgi_pass 127.0.0.1:9000;
 }
 ```
+
 重启PHP-FPM和Nginx即可。
 
 ## 访问状态页
 ### 默认状态页
 按照上述的步骤开启状态页之后，即可通过浏览器访问状态页,访问方式如下：`http://example.com/status`,内容如下：
+
 ```
 pool:                 www
 process manager:      dynamic
@@ -54,9 +59,11 @@ max active processes: 31
 max children reached: 0
 slow requests:        0
 ```
+
 <br />
 ### 全状态页
 如果需要显示更详细的状态页面，可以在URL追加`?full`参数，如`http://example.com/status?full `,示例结果如下：
+
 ```
 pid:                  1419692
 state:                Idle
@@ -76,14 +83,17 @@ last request memory:  524288
 ### 状态页输出格式
 通过追加不同的参数，可以指定状态页以不同的格式输出。  
 JSON格式:
+
 ```
 http://example.com/status?json&full
 ```
 HTML格式:
+
 ```
 http://example.com/status?html&full
 ```
 XML格式:
+
 ```
 http://example.com/status?xml&full
 ```
@@ -93,3 +103,4 @@ http://example.com/status?xml&full
 
 ## 参考
 * [Nginx – Enable PHP-FPM Status Page](https://rtcamp.com/tutorials/php/fpm-status-page/)
+

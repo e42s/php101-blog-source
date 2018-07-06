@@ -11,9 +11,11 @@ tags:
 
 ## static关键字
 PHP手册里对`static`关键字的介绍如下：
+
 ```
 Declaring class properties or methods as static makes them accessible without needing an instantiation of the class. A property declared as static cannot be accessed with an instantiated class object (though a static method can).
 ```
+
 大体意思是，将类的属性和方法声明为**静态**以后，可以直接访问静态属性和方法，而不需要实例化对象。  
 
 PHP中静态成员和方法的特性如下：
@@ -37,6 +39,7 @@ PHP中静态成员和方法的特性如下：
 用一个demo来直接说明self与static的区别。
 
 ### self示例：
+
 ```
 <?php
 class Vehicle {
@@ -55,12 +58,14 @@ class Sedan extends Vehicle {
 Sedan::what_vehicle();
 ```
 程序输出:
+
 ```
 Sedan
 This is a Vehicle 
 ```
 <br />
 ### static示例：
+
 ```
 <?php
 class Vehicle {
@@ -78,7 +83,9 @@ class Sedan extends Vehicle {
 
 Sedan::what_vehicle();
 ```
+
 程序输出：
+
 ```
 Sedan
 This is a Sedan
@@ -91,3 +98,4 @@ This is a Sedan
 ## 参考
 * [Learning About Late Static Bindings in PHP](http://infopotato.com/blog/index/late_static_bindings)
 * [后期静态绑定](http://php.net/manual/zh/language.oop5.late-static-bindings.php)
+

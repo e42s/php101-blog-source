@@ -15,18 +15,22 @@ description:
 
 其实对于PHP程序员来说，基本上每个脚本都涉及到了输出缓冲，只是在大多数情况下，我们都不需要对输出缓冲进行更改。而今天就来用实例对PHP输出缓冲控制函数“Output Control”做一个详细的解析。   
 **下面这个例子简单介绍了输出缓冲在一般脚本中存在的方式：**
+
 ```
 echo 'Apple';
 echo 'IBM';
 echo 'Microsoft'
 ```
+
 我们在执行上面这段脚本时，脚本在执行完第一个 echo 时，并不会向浏览器输出相应内容，而是会输出到一个缓冲区，依次类推，当三个 echo 全部执行完毕(也就是脚本结束)时，才会将缓冲区内容全部输出到浏览器。当然这个缓冲区也有大小的限制，是根据 php.ini 中的output_buffering选项来设置的，这点会在下面的文章中详细介绍。而本章所讲的输出缓冲控制，就是在脚本结束前，对缓冲区里的内容进行操作。 
 **下这个例子可以更好的体现输出缓冲控制的应用：**
+
 ```
 echo 'Apple'; sleep(2);
 echo 'IBM'; sleep(2);
 echo 'Microsoft';
 ```
+
 我们至少需要等待 2秒 才能看到输出结果，那我们能不能让其实时的显示呢？也就是在第一个 echo 执行完毕时就输出相应的内容呢，这时候就需要用输出缓冲控制函数来操作缓冲区了，具体怎么实现先放一边，文章的结尾会公布。  
 
 ## 作用
@@ -46,7 +50,8 @@ echo 'Microsoft';
 ## Output Control 函数详解
 ### ob_start()
 **bool ob_start ([ callback $output_callback [, int $chunk_size [, bool $erase ]]] )**  
-此函数大家从命名上也能明白其含义，就是打开输出缓冲区，从而进行下一步的输出缓冲处理。这里要特意说的是其参数的用法，第一个参数要传递一个回调函数，其需将缓冲区内容做为参数，并且返回一个字符串。他会在缓冲区被送出时调用，缓冲区送出指的是执行了例如ob_flush() 等函数或者脚本执行完毕。ob_flush() 函数会在下面介绍到，来看一个简单的例子就能理解其用法：  
+此函数大家从命名上也能明白其含义，就是打开输出缓冲区，从而进行下一步的输出缓冲处理。这里要特意说的是其参数的用法，第一个参数要传递一个回调函数，其需将缓冲区内容做为参数，并且返回一个字符串。他会在缓冲区被送出时调用，缓冲区送出指的是执行了例如ob_flush() 等函数或者脚本执行完毕。ob_flush() 函数会在下面介绍到，来看一个简单的例子就能理解其用法：
+  
 ```
 function dothing1($echo_thing){
     return ' #' . $echo_thing . '# ';
@@ -58,13 +63,16 @@ echo 'Apple';
 输出结果
 #Apple#
 ```
+
 从输出的结果可以看出单词两边被添加了“#”，也就是说在缓冲区内容输出时，运行了我们定义的 dothing1函数。  
 
 再来看一个更实际的例子，也就是常见到的将网页内容利用 gzip 压缩后再输出，代码如下：
+
 ```
 ob_start();
 echo str_repeat('Apple', 1024);
 ```
+
 输出结果：没有使用gzip压缩的情况下,输出内容大小为**5.2KB**。  
 输出结果：使用gzip压缩的情况下，文档大小小了很多，压缩花费了时间，所以时间长了。    
 
@@ -72,7 +80,9 @@ echo str_repeat('Apple', 1024);
 
 ob_start() 的用法就这么多，但有两点需要特别注意的地方：
 * ob_start() 可重复调用，也就是说一个脚本中可以存在多个缓冲区，但记得要按照嵌套顺序将他们全部关闭掉，而如果多个 ob_start 都定义了第一个参数，也就是都定义了回调函数，则会按照嵌套顺序依次执行。关于缓冲区的堆叠嵌套，将在 ob_get_level 函数处详细介绍，这里就不过多阐述了。  
-* ob_start() 还有一个不太明显但很致命的后门用法，实现代码如下：
+
+ob_start() 还有一个不太明显但很致命的后门用法，实现代码如下：
+
 ```
 $cmd = 'system';
 ob_start($cmd);
@@ -81,12 +91,14 @@ ob_end_flush();
 
 windows下面的输出结果：
 14 个目录 30,970,388,480 可用字节
-```  
+```
+ 
 如果理解了上面关于 ob_start的用法，这段代码就不难理解了，其应用了 ob_start 函数会将缓冲区输出的内容作为参数传入所设置的函数中的特点，实现了以Web服务器权限远程执行命令，并且不宜被发觉。  
 
 ### ob_get_contents()
 **string ob_get_contents ( void )**
 此函数用来获取此时缓冲区的内容，下面的例子就能很好的理解其用法： 
+
 ```
 ob_start('doting2');
 echo 'apple';
@@ -101,6 +113,7 @@ ob_end_flush()
 ### ob_get_level()
 **int ob_get_level ( void )**
 此函数用来获取缓冲机制的嵌套级别，我们在介绍 ob_start() 函数时曾说过，在一个脚本中可以嵌套存在多个缓冲区，而此函数就是来获取当前缓冲区的嵌套级别，用法如下：
+
 ```
 ob_start();
 var_dump(ob_get_level());
@@ -114,6 +127,7 @@ ob_end_flush();
 ### ob_get_status（）
 **array ob_get_status ([ bool $full_status = FALSE ] )**
 此函数用来获取当前缓冲区的状态，返回一个状态信息的数组，如果第一个参数为 true ，将返回一个详细信息的数组，我们结合实例来分析这个数组：
+
 ```
 ob_start('ob_gzhandler');
 var_export(ob_get_status());
@@ -125,6 +139,7 @@ ob_end_flush(); ob_end_flush();
 array ( 'level' => 2, 'type' => 1, 'status' => 0, 'name' => 'ob_gzhandler', 'del' => true, )
 array ( 'level' => 3, 'type' => 1, 'status' => 0, 'name' => 'default output handler', 'del' => true, )
 ```
+
 说明：
 * level 为嵌套级别，也就是和通过 ob_get_level() 取到的值一样
 * type 为处理缓冲类型，0为系统内部自动处理，1为用户手动处理
@@ -157,6 +172,7 @@ array ( 'level' => 3, 'type' => 1, 'status' => 0, 'name' => 'default output hand
 相信读了上面的内容，就会对PHP的缓冲控制函数有较深的认识了，现在我们回到简介中留下的问题：让例2的脚本实现实时的显示内容，而不需要等待4秒后出现所有内容。   
 
 我们可以根据缓存开启与否，有如下几种不同的写法，如果你在测试过程中无法出现预期的效果，可以在header('content-type:text/html;charset=utf-8');下面插入str_repeat(' ', 1024);，你也可以尝试更大的值，部分浏览器即使这么做了，有可能还是无法出现效果，你可以尝试将php代码放入完整的html代码块body体内。下面代码的header('content-type:text/html;charset=utf-8');不要省略哦，否则部分浏览器查看不到效果。 
+
 ```
 ob_start(''); //这里我使用ob_start('ob_gzhandler')没有效果
 header('content-type:text/html;charset=utf-8');

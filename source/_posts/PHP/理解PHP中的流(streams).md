@@ -20,6 +20,7 @@ PHP手册中对流的描述如下：
 PHP中流的形式如：`<scheme>://<target>`。`<scheme>`是包装器的名字，`<target>`的内容取决于不同的包装器语法。  
 默认的包装器是`file://`,也就是说每次我们访问文件系统的时候都使用了流。例如，我们可以使用如下两种方式来读取文件：`readfile('/path/to/somefile.txt') `和`readfile('file:///path/to/somefile.txt')`，使用这两种方式读取文件，可以得到相同的结果。
 正如前面所说，PHP提供了一些内置的包装器、协议和过滤器。查看我们的机器上安装了哪些包装器，可以使用如下几个函数：
+
 ```
 <?php
     var_dump(stream_get_transports());
@@ -28,6 +29,7 @@ PHP中流的形式如：`<scheme>://<target>`。`<scheme>`是包装器的名字�
 ?>
 ```
 我本地的环境输出内容如下:
+
 ```
 array (size=8)
   0 => string 'tcp' (length=3)
@@ -86,3 +88,4 @@ PHP有它自己的访问输入/输出(I/O)流的包装器。PHP有基本的`php:
 2.[Using PHP Streams Effectively](http://www.sitepoint.com/using-php-streams-effectively/)  
 3.[Introduction to PHP streams](http://www.sk89q.com/2010/04/introduction-to-php-streams/)  
 4.[PHP输入流php://input ](http://blog.csdn.net/lxzo123/article/details/6701655)
+
