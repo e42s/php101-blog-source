@@ -172,13 +172,127 @@ apply方法的使用方法如下:
 start_time = int(time.time())
 print(f'Start Time....{start_time}')
 
-pool = mp.Pool(processes=4)
-pool.apply(square, args=(5,))
+pool = mp.Pool()
+result = [pool.apply(square, args=(n,)) for n in range(5)]
+print(result)
+
 
 end_time = int(time.time())
 print(f'End Time......{end_time}')
 print(f'Execute Time......{end_time - start_time}')
 ```
+apply方法会放回target函数的运行结果。
 
+#### apply_async方法
+apply_async方法与apply方法类似，不同的是apply_async方法不用等待所有的进程执行结束并返回执行结果而是直接返回。换句话说，apply_async是异步的，使用方法如下:
+
+```
+if __name__ == '__main__':
+    start_time = int(time.time())
+    print(f'Start Time....{start_time}')
+
+    pool = mp.Pool()
+    result_apply = [pool.apply_async(square, args=(n,)) for n in range(5)]
+    print(result_apply)
+    # for result in result_list:
+    #     print(result.get())
+
+    end_time = int(time.time())
+    print(f'End Time......{end_time}')
+    print(f'Execute Time......{end_time - start_time}')
+```
+输出结果如下:
+
+```
+Start Time....1531029878
+[<multiprocessing.pool.ApplyResult object at 0x103607908>, <multiprocessing.pool.ApplyResult object at 0x1036079e8>, <multiprocessing.pool.ApplyResult object at 0x103607a90>, <multiprocessing.pool.ApplyResult object at 0x103607b38>, <multiprocessing.pool.ApplyResult object at 0x103607c18>]
+End Time......1531029878
+Execute Time......0
+```
+apply_async函数返回`ApplyResult`, 要想获取函数的执行结果可以使用`get()`方法，但是`get()`方法会像`apply`方法一样阻塞程序运行，等待所有进程结束并返回结果以后再继续执行。
+
+相对于`apply`方法来说，`apply_async`方法是异步的，所以`apply_async`方法可以设置回调函数，回调函数会在进程调用的函数执行结束后自动执行。使用方法如下:
+
+```
+pool = mp.Pool()
+result_apply = [pool.apply_async(square, args=(n,), callback=callback) for n in range(5)]
+print(result_apply)
+pool.close()
+pool.join()
+```
+
+### map方法
+`map`方法同Python内建的方法一样，使用方法如下:
+
+```
+if __name__ == '__main__':
+    start_time = int(time.time())
+    print(f'Start Time....{start_time}')
+
+    num_list = [2, 4, 6, 8, 10]
+    pool = mp.Pool()
+    result = pool.map(square, num_list)
+    print(result)
+
+    end_time = int(time.time())
+    print(f'End Time......{end_time}')
+    print(f'Execute Time......{end_time - start_time}')
+```
+输出结果如如下:
+
+```
+Start Time....1531030555
+Sleep 3 Seconds......
+4 squared is 16
+Sleep 4 Seconds......
+6 squared is 36
+Sleep 5 Seconds......
+2 squared is 4
+Sleep 5 Seconds......
+8 squared is 64
+Sleep 5 Seconds......
+10 squared is 100
+[4, 16, 36, 64, 100]
+End Time......1531030561
+Execute Time......6
+```
+
+从结果可以看出，不同于`apply`方法，`map`方法一次启动多个进程，因此调用函数的执行是无序的。
+
+#### map_async方法
+同上可知，map_async方法的使用方法
+
+#### 总结
+* apply: apply方法，一次只能放入一组参数，返回一个结果
+* apply_async: 该方法同样一次只能放入一组参数，返回一个结果，可以传入回调函数
+* map: 该方法放入迭代参数，并返回多个结果
+* map_async: 该方法放入多个参数，并返回多个结果，可以传入回调函数
+
+> `apply*`方法一次启动一个进程，`map`方法一次启动多个进程。
+
+## Lock锁
+锁机制保证了一次只有一个进程运行，避免了资源争抢。使用方法如下:
+
+```
+lock = mp.Lock()
+process_list = [mp.Process(target=square, args=(n, lock)) for n in range(4)]
+for process in process_list:
+    process.start()
+for process in process_list:
+    process.join()
+
+```
+
+## 总结
+这篇文章简单介绍下Python多进程的基础知识，关于并发要考虑的问题还很多，等实际项目中再深入了解。
+
+## 参考
+[Python 201: A multiprocessing tutorial](https://www.blog.pythonlibrary.org/2016/08/02/python-201-a-multiprocessing-tutorial/)
+[multiprocessing.Pool: When to use apply, apply_async or map?](https://stackoverflow.com/questions/8533318/multiprocessing-pool-when-to-use-apply-apply-async-or-map)
+[python multiprocessing and threads 01](http://songhuiming.github.io/pages/2016/06/18/python-multiprocessing-and-threads-01/)
+[Introduction to Multiprocessing in Python](https://code.tutsplus.com/tutorials/introduction-to-multiprocessing-in-python--cms-30281)
+
+
+<br />
 
 
